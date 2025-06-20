@@ -10,6 +10,7 @@ file_name_to_key = {
     "Salinas.mat": "salinas",
     "Pavia.mat": "pavia",
     "PaviaU.mat": "paviaU",
+    "Cuprite.mat": "cuprite",
 }
 
 
@@ -27,3 +28,4 @@ if __name__ == "__main__":
     analyze_mat_file(DATA_FILEPATH, "Salinas.mat")
     analyze_mat_file(DATA_FILEPATH, "Pavia.mat")
     analyze_mat_file(DATA_FILEPATH, "PaviaU.mat")
+    analyze_mat_file(DATA_FILEPATH, "Cuprite.mat")
