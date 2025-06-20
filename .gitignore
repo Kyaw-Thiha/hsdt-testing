@@ -1,6 +1,3 @@
-/data/icvl_clean/*
-/data/icvl_30/*
-/data/icvl_50/*
-/data/icvl_70/*
-/data/HS/*
+/data/*/*.mat
+/data/*/*.npy
 */__pycache__/*
