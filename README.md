@@ -44,6 +44,12 @@ You can also try testing `data/noise_gaussian_50` and `data/noise_gaussian_70`
 
 Note that the `hsdt_s_complex.pth` and `hsdt_l_complex.pth` does not seem to working due to the wrong shape. 
 
+3b. If you want to record the error logs given from the command, run the following command instead
+```
+python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_gaussian.pth -kp "" -t noise_gaussian_30 > logs/hsdt_test.log 2>&1
+```
+This will record the error logs in `logs/hsdt_test.log` file.
+
 ## Changes made to original code
 In `/hsirun/test.py`, the following code around line-124 to line-131 is the edited one.   
 
