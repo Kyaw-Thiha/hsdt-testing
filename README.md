@@ -1,9 +1,10 @@
 # HSDT Testing
 This repo has all the required files for testing the [HSDT](https://github.com/Zeqiang-Lai/HSDT),
-as well as its companion tester [HSIR](https://github.com/bit-isp/HSIR/)
+as well as its companion tester [HSIR](https://github.com/bit-isp/HSIR/)   
+HSDT is from this [paper](https://arxiv.org/pdf/2303.09040), and my companion notes can be found in [notion](https://utat-ss.notion.site/HSDT-Denoiser-aa306c141f8c4bbd8100d43efe740df1)   
 
-The HSDT files are inside the hsdt folder
-From HSIR, only the required folders of /hsir and /hsirun are copied.
+The HSDT files are inside the hsdt folder.   
+From HSIR, only the required folders of /hsir and /hsirun are copied.   
 
 ## Steps to run 
 1. Download the mat files from this [link](https://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes#Indian_Pines) into the `data/raw` folder
