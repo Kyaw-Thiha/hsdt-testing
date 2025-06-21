@@ -25,7 +25,7 @@ python -m main
 python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_complex.pth -kp "" -d data -t noise_gaussian_30
 ```
 
-Explanation: 
+### Explanation 
 - `python -m hsirun.test` Run the `/hsirun/test.py` file.
 Note that we are not running the hsir from its remote package since I had to make a small change.
 - `-a hsdt.hsdt.hsdt` Set the 'arch' parameter as the hsdt model from `hsdt/hsdt/arch.py`
@@ -44,7 +44,8 @@ You can also try testing `data/noise_gaussian_50` and `data/noise_gaussian_70`
 
 Note that the `hsdt_s_complex.pth` and `hsdt_l_complex.pth` does not seem to working due to the wrong shape. 
 
-3b. If you want to record the error logs given from the command, run the following command instead
+## Error Logs
+If you want to record the error logs given from the command, run the following command instead
 ```
 python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_gaussian.pth -kp "" -t noise_gaussian_30 > logs/hsdt_test.log 2>&1
 ```
