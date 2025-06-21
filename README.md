@@ -46,7 +46,7 @@ Note that the `hsdt_s_complex.pth` and `hsdt_l_complex.pth` does not seem to wor
 ## Changes made to original code
 In `/hsirun/test.py`, the following code around line-124 to line-131 is the edited one.   
 
-``
+```python
 if args.key_path and args.key_path.strip():
     ckpt = tl.utils.dict_get(state, args.key_path)
     if ckpt is None:
@@ -55,4 +55,5 @@ if args.key_path and args.key_path.strip():
         )
 else:
     ckpt = state
-``
+```
+
