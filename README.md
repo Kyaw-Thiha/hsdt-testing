@@ -1,104 +1,57 @@
-# HSDT
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hybrid-spectral-denoising-transformer-with/hyperspectral-image-denoising-on-icvl-hsi-1)](https://paperswithcode.com/sota/hyperspectral-image-denoising-on-icvl-hsi-1?p=hybrid-spectral-denoising-transformer-with)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hybrid-spectral-denoising-transformer-with/hyperspectral-image-denoising-on-icvl-hsi-2)](https://paperswithcode.com/sota/hyperspectral-image-denoising-on-icvl-hsi-2?p=hybrid-spectral-denoising-transformer-with)
+# HSDT Testing
+This repo has all the required files for testing the [HSDT](https://github.com/Zeqiang-Lai/HSDT),
+as well as its companion tester [HSIR](https://github.com/bit-isp/HSIR/)
 
-Official PyTorch Implementation of [Hybrid Spectral Denoising Transformer with Guided Attention](http://arxiv.org/abs/2303.09040). ICCV 2023
+The HSDT files are inside the hsdt folder
+From HSIR, only the required folders of /hsir and /hsirun are copied.
 
-*[Zeqiang Lai](https://zeqiang-lai.github.io/), Chenggang Yan, [Ying Fu](https://ying-fu.github.io/)*.
+## Steps to run 
+1. Download the mat files from this [link](https://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes#Indian_Pines) into the `data/raw` folder
+For testing purposes, I downloaded
+- Indian_pines.mat
+- Pavia.mat
+- PaviaU.mat
+- Salinas.mat
 
-<img src="asset/arch.png" width="600px"/> 
+2. Run the `main.py` from the `src` folder in order to process the files.
+``
+cd src
+python -m main
+``
 
-🌟 **Hightlights**
+3. Run the following code to test and benchmark HSDT.
+``
+python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_complex.pth -kp "" -d data -t noise_gaussian_30
+``
 
-- *Superior hybrid spectral denoising transformer* (HSDT), powered by
-    - a novel 3D guided spectral self-attention (GSSA),
-    - 3D spectral-spatial seperable convolution (S3Conv), and
-    - self-modulated feed-forward network (SM-FFN).
-- *Super fast convergence*
-    - 1 epoch to reach 39.5 PSNR on ICVL Gaussian 50.
-    - 3 epochs surpasses QRNN3D trained with 30 epochs.
-- *Super lightweight*
-    - HSDT-S achieves comparable performance against the SOTA with only 0.13M parameters.
-    - HSDT-M outperforms the SOTA by a large margin with only 0.52M parameters.
+Explanation: 
+- `python -m hsirun.test` Run the `/hsirun/test.py` file.
+Note that we are not running the hsir from its remote package since I had to make a small change.
+- `-a hsdt.hsdt.hsdt` Set the 'arch' parameter as the hsdt model from `hsdt/hsdt/arch.py`
+- `-r models/hsdt_m_complex.pth` 
+Set the 'resume' parameter which is a parameter for the checkpoint.
+Ensure it is set to one of the .pth models from `models/`
+- `-kp ""`
+Set the 'key_path' parameter which is the 'key' meant to identify the checkpoint inside the .pth files.
+For whatever reason, it seems like the .pth files from HSDT have their checkpoint in the root;
+not inside a specific key.
+This cannot be done in the original code. This is only possible due to changes made to the HSIR codebase.
+- `-d data` Set the 'basedir' parameter to the data folder.
+- `-t noise_gaussian_30` Set the 'testset' parameter to the noise folder containing the mat files.
+Note that the basedir and testset parameter are joined together in the testing code as `data/noise_gaussian_30`
 
-🤗 **See Also**
+Note that the `hsdt_s_complex.pth` and `hsdt_l_complex.pth` does not seem to working due to the wrong shape. 
 
-- [MAN](https://github.com/Zeqiang-Lai/MAN) : Another superior HSI denoising network based on RNN.
-- [DPHSIR](https://github.com/Zeqiang-Lai/DPHSIR) : Plug-and-play ADMM that utilize HSI denoiser for unified HSI restoration without any training.
-- [HSIR](https://github.com/bit-isp/HSIR/) : Out-of-box HSI denoising training, testing, and visualization framework.
+## Changes made to original code
+In `/hsirun/test.py`, the following code around line-124 to line-131 is the edited one.
+``
+if args.key_path and args.key_path.strip():
+    ckpt = tl.utils.dict_get(state, args.key_path)
+    if ckpt is None:
+        raise ValueError(
+            f"key_path '{args.key_path}' is wrong or not found in checkpoint."
+        )
+else:
+    ckpt = state
 
-## Usage
-
-Download the pretrained model at [Github Release](https://github.com/Zeqiang-Lai/HSDT/releases/tag/v1.0).
-
-- Training, testing, and visualize results with [HSIR](https://github.com/bit-isp/HSIR).
-
-```shell
-python -m hsirun.test -a hsdt.hsdt -r ckpt/man_gaussian.pth -t icvl_512_30 icvl_512_50
-python -m hsirun.train -a hsdt.hsdt -s schedule.gaussian
-python -m hsirun.train -a hsdt.hsdt -s schedule.complex -r checkpoints/hsdts.hsdt/model_latest.pth
-python -m hsiboard.app --logdir results
-```
-
-- Using our model.
-
-```python
-import torch
-from hsdt import hsdt
-
-net = hsdt()
-x = torch.randn(4,1,31,64,64)
-y = net(x)
-```
-
-- Using our components.
-
-```python
-import torch
-from hsdt import (
-    S3Conv
-)
-
-x = torch.randn(4,16,31,64,64)
-block = S3Conv(16, 16, 3, 1, 1)
-out = block(x) # [4,16,31,64,64]
-```
-
-Tips for training
-
-- use `xavier_normal_` weight initialization.
-
-
-## Performance
-
-<details>
-<summary>Gaussian denoising</summary>
-<img src="asset/gaussian.png" width="800px"/> 
-</details>
-
-<details>
-<summary>Complex denoising</summary>
-<img src="asset/complex.png" width="800px"/> 
-</details>
-
-<details>
-<summary>Real/CAVE denoising</summary>
-<img src="asset/real_cave.png" width="400px"/> 
-</details>
-
-<details>
-<summary>Comparsion with other methods</summary>
-<img src="asset/cmp.png" width="800px"/> 
-</details>
-
-
-## Citation
-
-```bibtex
-@inproceedings{lai2023hsdt,
-  author = {Lai, Zeqiang and Chenggang, Yan and Fu, Ying},
-  title = {Hybrid Spectral Denoising Transformer with Guided Attention},
-  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
-  year = {2023},
-}
-```
+``
