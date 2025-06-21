@@ -14,15 +14,16 @@ For testing purposes, I downloaded
 - Salinas.mat
 
 2. Run the `main.py` from the `src` folder in order to process the files.
-``
+```
 cd src
 python -m main
-``
+```
+
 
 3. Run the following code to test and benchmark HSDT.
-``
+```
 python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_complex.pth -kp "" -d data -t noise_gaussian_30
-``
+```
 
 Explanation: 
 - `python -m hsirun.test` Run the `/hsirun/test.py` file.
