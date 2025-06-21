@@ -15,28 +15,45 @@ UseBN = True
 
 
 def PlainConv(in_ch, out_ch):
-    return nn.Sequential(OrderedDict([
-        ('conv', Conv3d(in_ch, out_ch, 3, 1, 1, bias=False)),
-        ('bn', BatchNorm3d(out_ch) if UseBN else nn.Identity()),
-        ('attn', TransformerBlock(out_ch, bias=True))
-    ]))
+    return nn.Sequential(
+        OrderedDict(
+            [
+                ("conv", Conv3d(in_ch, out_ch, 3, 1, 1, bias=False)),
+                ("bn", BatchNorm3d(out_ch) if UseBN else nn.Identity()),
+                ("attn", TransformerBlock(out_ch, bias=True)),
+            ]
+        )
+    )
 
 
 def DownConv(in_ch, out_ch):
-    return nn.Sequential(OrderedDict([
-        ('conv', nn. Conv3d(in_ch, out_ch, 3, (1, 2, 2), 1, bias=False)),
-        ('bn', BatchNorm3d(out_ch)if UseBN else nn.Identity()),
-        ('attn', TransformerBlock(out_ch, bias=True))
-    ]))
+    return nn.Sequential(
+        OrderedDict(
+            [
+                ("conv", nn.Conv3d(in_ch, out_ch, 3, (1, 2, 2), 1, bias=False)),
+                ("bn", BatchNorm3d(out_ch) if UseBN else nn.Identity()),
+                ("attn", TransformerBlock(out_ch, bias=True)),
+            ]
+        )
+    )
 
 
 def UpConv(in_ch, out_ch):
-    return nn.Sequential(OrderedDict([
-        ('up', nn.Upsample(scale_factor=(1, 2, 2), mode='trilinear', align_corners=True)),
-        ('conv', nn.Conv3d(in_ch, out_ch, 3, 1, 1, bias=False)),
-        ('bn', BatchNorm3d(out_ch) if UseBN else nn.Identity()),
-        ('attn', TransformerBlock(out_ch, bias=True))
-    ]))
+    return nn.Sequential(
+        OrderedDict(
+            [
+                (
+                    "up",
+                    nn.Upsample(
+                        scale_factor=(1, 2, 2), mode="trilinear", align_corners=True
+                    ),
+                ),
+                ("conv", nn.Conv3d(in_ch, out_ch, 3, 1, 1, bias=False)),
+                ("bn", BatchNorm3d(out_ch) if UseBN else nn.Identity()),
+                ("attn", TransformerBlock(out_ch, bias=True)),
+            ]
+        )
+    )
 
 
 class Encoder(nn.Module):
@@ -62,6 +79,7 @@ class Encoder(nn.Module):
 
 class Decoder(nn.Module):
     count = 1
+
     def __init__(self, channels, num_half_layer, sample_idx, Fusion=None):
         super(Decoder, self).__init__()
         # Decoder
@@ -102,7 +120,9 @@ class HSDT(nn.Module):
         super(HSDT, self).__init__()
         self.head = PlainConv(in_channels, channels)
         self.encoder = Encoder(channels, num_half_layer, sample_idx)
-        self.decoder = Decoder(channels * (2**len(sample_idx)), num_half_layer, sample_idx, Fusion=Fusion)
+        self.decoder = Decoder(
+            channels * (2 ** len(sample_idx)), num_half_layer, sample_idx, Fusion=Fusion
+        )
         self.tail = nn.Conv3d(channels, 1, 3, 1, 1, bias=True)
 
     def forward(self, x):
@@ -120,7 +140,7 @@ class HSDT(nn.Module):
         if IsConvImpl:
             new_state_dict = {}
             for k, v in state_dict.items():
-                if ('attn.attn' in k) and 'weight' in k and 'attn_proj' not in k:
+                if ("attn.attn" in k) and "weight" in k and "attn_proj" not in k:
                     new_state_dict[k] = v.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)
                 else:
                     new_state_dict[k] = v
@@ -134,7 +154,9 @@ class HSDTSSR(nn.Module):
         self.proj = nn.Conv2d(3, 31, 1, bias=False)
         self.head = PlainConv(in_channels, channels)
         self.encoder = Encoder(channels, num_half_layer, sample_idx)
-        self.decoder = Decoder(channels * (2**len(sample_idx)), num_half_layer, sample_idx, Fusion=Fusion)
+        self.decoder = Decoder(
+            channels * (2 ** len(sample_idx)), num_half_layer, sample_idx, Fusion=Fusion
+        )
         self.tail = nn.Conv3d(channels, 1, 3, 1, 1, bias=True)
 
     def forward(self, x):
@@ -164,7 +186,7 @@ class HSDTSSR(nn.Module):
         if IsConvImpl:
             new_state_dict = {}
             for k, v in state_dict.items():
-                if ('attn.attn' in k) and 'weight' in k and 'attn_proj' not in k:
+                if ("attn.attn" in k) and "weight" in k and "attn_proj" not in k:
                     new_state_dict[k] = v.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)
                 else:
                     new_state_dict[k] = v
