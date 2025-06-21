@@ -29,12 +29,13 @@ def add_gaussian_noise(input_folder: str, output_folder: str, snr_db: int):
         for key, value in data.items():
             if key.startswith("__"):
                 continue
-            if isinstance(value, np.ndarray):
+            if isinstance(value, np.ndarray) and key != "gt":
                 sigma = estimate_sigma_from_snr(value, snr_db)
                 noise = np.random.normal(0, sigma, size=value.shape)
                 noisy_data[key] = value + noise
             else:
-                noisy_data[key] = value  # Keep non-array data untouched
+                # Keep non-array and ground truth data untouched
+                noisy_data[key] = value
 
         output_path = os.path.join(output_folder, filename)
         savemat(output_path, noisy_data)
