@@ -36,7 +36,6 @@ GitPython==3.1.44
 h11==0.16.0
 h5py==3.13.0
 hf-xet==1.1.2
-hsir==0.1.1
 httpcore==1.0.9
 httpx==0.28.1
 huggingface-hub==0.32.3
@@ -67,6 +66,7 @@ jupyterlab_server==2.27.3
 jupyterlab_widgets==3.0.15
 kiwisolver==1.4.8
 lazy_loader==0.4
+lmdb==1.6.2
 MarkupSafe==3.0.2
 matplotlib==3.10.3
 matplotlib-inline==0.1.7
@@ -96,6 +96,7 @@ nvidia-cusparselt-cu12==0.6.3
 nvidia-nccl-cu12==2.26.2
 nvidia-nvjitlink-cu12==12.6.85
 nvidia-nvtx-cu12==12.6.77
+opencv-python==4.11.0.86
 overrides==7.7.0
 packaging==24.2
 pandas==2.2.3
@@ -139,6 +140,8 @@ soupsieve==2.7
 stack-data==0.6.3
 streamlit==1.45.1
 sympy==1.14.0
+sync-batchnorm==0.0.1
+tabulate==0.9.0
 tenacity==9.1.2
 terminado==0.18.1
 tifffile==2025.5.26
