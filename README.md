@@ -32,9 +32,9 @@ Note that we are not running the hsir from its remote package since I had to mak
 Set the 'resume' parameter which is a parameter for the checkpoint.
 Ensure it is set to one of the .pth models from `models/`
 - `-kp ""`
-Set the 'key_path' parameter which is the 'key' meant to identify the checkpoint inside the .pth files.
+Set the 'key_path' parameter which is the 'key' meant to identify the checkpoint inside the .pth files.  
 For whatever reason, it seems like the .pth files from HSDT have their checkpoint in the root;
-not inside a specific key.
+not inside a specific key.   
 This cannot be done in the original code. This is only possible due to changes made to the HSIR codebase.
 - `-d data` Set the 'basedir' parameter to the data folder.
 - `-t noise_gaussian_30` Set the 'testset' parameter to the noise folder containing the mat files.
@@ -53,5 +53,4 @@ if args.key_path and args.key_path.strip():
         )
 else:
     ckpt = state
-
 ``
