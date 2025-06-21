@@ -7,21 +7,26 @@ The HSDT files are inside the hsdt folder.
 From HSIR, only the required folders of /hsir and /hsirun are copied.   
 
 ## Steps to run 
-1. Download the mat files from this [link](https://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes#Indian_Pines) into the `data/raw` folder
+1. Install the required packages from requirements.txt
+```
+pip install -r requirements.txt
+```
+
+2. Download the mat files from this [link](https://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes#Indian_Pines) into the `data/raw` folder
 For testing purposes, I downloaded
 - Indian_pines.mat
 - Pavia.mat
 - PaviaU.mat
 - Salinas.mat
 
-2. Run the `main.py` from the `src` folder in order to process the files.
+3. Run the `main.py` from the `src` folder in order to process the files.
 ```
 cd src
 python -m main
 ```
 
 
-3. Run the following code to test and benchmark HSDT.
+4. Run the following code to test and benchmark HSDT.
 ```
 python -m hsirun.test -a hsdt.hsdt.hsdt -r models/hsdt_m_complex.pth -kp "" -d data -t noise_gaussian_30
 ```
