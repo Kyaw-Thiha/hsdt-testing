@@ -31,19 +31,21 @@ Note that we are not running the hsir from its remote package since I had to mak
 - `-r models/hsdt_m_complex.pth` 
 Set the 'resume' parameter which is a parameter for the checkpoint.
 Ensure it is set to one of the .pth models from `models/`
-- `-kp ""`
+- `-kp ""`   
 Set the 'key_path' parameter which is the 'key' meant to identify the checkpoint inside the .pth files.  
 For whatever reason, it seems like the .pth files from HSDT have their checkpoint in the root;
 not inside a specific key.   
 This cannot be done in the original code. This is only possible due to changes made to the HSIR codebase.
 - `-d data` Set the 'basedir' parameter to the data folder.
 - `-t noise_gaussian_30` Set the 'testset' parameter to the noise folder containing the mat files.
-Note that the basedir and testset parameter are joined together in the testing code as `data/noise_gaussian_30`
+Note that the basedir and testset parameter are joined together in the testing code as `data/noise_gaussian_30`   
+You can also try testing `data/noise_gaussian_50` and `data/noise_gaussian_70`  
 
 Note that the `hsdt_s_complex.pth` and `hsdt_l_complex.pth` does not seem to working due to the wrong shape. 
 
 ## Changes made to original code
-In `/hsirun/test.py`, the following code around line-124 to line-131 is the edited one.
+In `/hsirun/test.py`, the following code around line-124 to line-131 is the edited one.   
+
 ``
 if args.key_path and args.key_path.strip():
     ckpt = tl.utils.dict_get(state, args.key_path)
