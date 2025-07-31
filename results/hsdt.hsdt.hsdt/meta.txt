@@ -1,0 +1,3 @@
+2025-07-31-15:19:41
+python /home/kevin/Documents/Projects/hsdt-testing/hsirun/test.py -a hsdt.hsdt.hsdt -r models/hsdt_m_complex.pth -kp  -d data -t noise_gaussian_70
+Namespace(arch='hsdt.hsdt.hsdt', name=None, resume='models/hsdt_m_complex.pth', testset=['noise_gaussian_70'], basedir='data', logdir='results', save_img=False, clamp=False, key_path='', bandwise=False, use_conv2d=False, force_run=False)

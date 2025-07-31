@@ -19,9 +19,30 @@ import torchlight as tl
 tl.metrics.set_data_format("chw")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+from skimage.metrics import structural_similarity as ssim_func
 
+
+def compute_mssim(pred, gt):
+    pred_np = pred.cpu().numpy()
+    gt_np = gt.cpu().numpy()
+    total = 0.0
+    for i in range(pred_np.shape[0]):
+        # Assume shape is (C, H, W) — need to transpose to (H, W, C)
+        pred_img = np.transpose(pred_np[i], (1, 2, 0))
+        gt_img = np.transpose(gt_np[i], (1, 2, 0))
+        ssim = ssim_func(pred_img, gt_img, data_range=1.0, channel_axis=-1)
+        total += ssim
+    return total / pred_np.shape[0]
+
+
+# def bchw2hwc(x):
+#     return np.uint8(x.cpu().squeeze(0).permute(1, 2, 0).numpy() * 255)
 def bchw2hwc(x):
-    return np.uint8(x.cpu().squeeze(0).permute(1, 2, 0).numpy() * 255)
+    img = x.cpu().squeeze(0).permute(1, 2, 0).numpy() * 255
+    img = np.uint8(img)
+    if img.shape[-1] == 1:
+        img = img.squeeze(-1)
+    return img
 
 
 def eval(net, loader, name, logdir, clamp, bandwise):
@@ -65,7 +86,11 @@ def eval(net, loader, name, logdir, clamp, bandwise):
             )
 
             psnr = tl.metrics.mpsnr(targets, outputs).item()
-            ssim = tl.metrics.mssim(targets, outputs).item()
+            # ssim = tl.metrics.mssim(targets, outputs, data_range=1.0).item()
+            print(f"outputs.shape = {outputs.shape}")
+            print(f"targets.shape = {targets.shape}")
+
+            ssim = compute_mssim(outputs, targets)
             sam = tl.metrics.sam(targets, outputs).item()
 
             tracker.update("MPSNR", psnr)
@@ -90,7 +115,13 @@ def eval(net, loader, name, logdir, clamp, bandwise):
     print(f"Average results {tracker.summary()}")
 
     # log structural results
-    avg_stat = {k: v for k, v in tracker.result().items()}
+    # avg_stat = {k: v for k, v in tracker.result().items()}
+
+    # safely convert to native Python types
+    avg_stat = {k: float(v) for k, v in tracker.result().items()}
+    detail_stat = {
+        k: {kk: float(vv) for kk, vv in v.items()} for k, v in detail_stat.items()
+    }
     tl.utils.io.jsonwrite(
         join(logdir, "log.json"), {"avg": avg_stat, "detail": detail_stat}
     )

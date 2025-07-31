@@ -4,6 +4,7 @@ from downsample import load_downsample_save
 
 FILE_PATH = "../data"
 
+SPATIAL_TARGET = (128, 128)
 OUT_BANDS = 31
 
 
@@ -17,6 +18,7 @@ def main():
         f"{FILE_PATH}/clean",
         f"{FILE_PATH}/clean",
         keys=["input", "gt"],
+        target_size=SPATIAL_TARGET,
         out_bands=OUT_BANDS,
     )
     print("-------------------------------------")
